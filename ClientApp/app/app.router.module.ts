@@ -1,19 +1,15 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { CounterComponent } from './components/counter/counter.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
+import { PortalModule } from "./portal/portal.module";
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent },
-    { path: 'counter', component: CounterComponent },
-    { path: 'fetch-data', component: FetchDataComponent },
-    { path: '**', redirectTo: 'home' }
+  { path: "", pathMatch: "full", redirectTo: "portal" },
+  { path: "portal", loadChildren: () => PortalModule },
+  { path: "**", redirectTo: "portal" },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
