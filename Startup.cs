@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RecruitmentPortal.DbContext;
 
 namespace RecruitmentPortal
 {
@@ -22,11 +20,16 @@ namespace RecruitmentPortal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add framework services.
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("AngularASPNETCore2WebApiAuth")));
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -53,6 +56,8 @@ namespace RecruitmentPortal
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
+            dbContext.Database.EnsureCreated();
         }
     }
 }
